@@ -27,3 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Optional<User> findByKakaoId(String kakaoId);
 }
 
+//사용자 정보를 조회·저장하는 레포지토리
+

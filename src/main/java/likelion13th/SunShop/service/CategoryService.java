@@ -40,3 +40,6 @@ public class CategoryService {
     }
 
 }
+
+//카테고리 기반으로 상품 목록을 조회하는 비즈니스 로직
+//ItemResponse.from()을 활용해 Entity → DTO 변환 책임 관리

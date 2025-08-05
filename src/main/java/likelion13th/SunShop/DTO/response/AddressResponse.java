@@ -19,3 +19,6 @@ public class AddressResponse {
         );
     }
 }
+
+// orderResponse 패턴과 동일하게 적용
+// 응답 DTO: 사용자 주소 정보를 클라이언트에게 반환

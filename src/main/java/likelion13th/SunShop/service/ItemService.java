@@ -42,3 +42,6 @@ public class ItemService {
     }
 
 }
+
+//상품 개별 조회 및 카테고리별 상품 리스트 조회 로직을 담당하는 서비스
+//GeneralException와 ItemResponse로 예외 처리와 응답포맷 변환을 일관되게 처리

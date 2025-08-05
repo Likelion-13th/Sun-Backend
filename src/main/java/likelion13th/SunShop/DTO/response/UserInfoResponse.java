@@ -19,3 +19,7 @@ public class UserInfoResponse {
     }
 
 }
+
+// orderResponse 패턴과 동일하게 적용
+// 클라이언트에 사용자 정보를 응답할 때 사용
+

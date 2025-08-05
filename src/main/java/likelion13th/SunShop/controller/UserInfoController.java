@@ -25,6 +25,7 @@ public class UserInfoController {
     public ResponseEntity<UserInfoResponse> getUser(@PathVariable Long userId) {
         return ResponseEntity.ok(new UserInfoResponse(userId, "홍길동"));
     }
-
-
 }
+
+//사용자 ID를 기반으로 기본 정보를 조회한다.
+//Swagger 문서화(@Operation)와 RESTful URL 설계(/users/info/{userId})를 적용

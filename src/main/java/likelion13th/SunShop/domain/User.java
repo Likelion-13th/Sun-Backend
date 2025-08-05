@@ -108,4 +108,6 @@ public class User extends BaseEntity {
     }
 }
 
-//회원 정보를 담당하며 주문(Order)과 1:N 관계이다.
+//회원 정보를 담당하며, 마일리지·주소·총 구매 금액 등의 상태를 관리한다.
+// 주문(Order)과 1:N 관계.
+//@Builder와 불변성 보장을 위한 setter 제한(AccessLevel.NONE)을 적용

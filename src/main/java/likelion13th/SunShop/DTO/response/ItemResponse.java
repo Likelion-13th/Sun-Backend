@@ -27,3 +27,6 @@ public class ItemResponse {
         );
     }
 }
+
+// orderResponse 패턴과 동일하게 적용
+// 클라이언트에 상품 정보를 응답할 때 사용

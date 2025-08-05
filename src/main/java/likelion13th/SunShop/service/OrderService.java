@@ -107,7 +107,7 @@ public class OrderService {
     }
 
 
-    @Scheduled(fixedRate = 60000) //테스트를 위해 바꿔놓음
+
     @Transactional
     public void updateOrderStatus() {
 

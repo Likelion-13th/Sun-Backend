@@ -59,3 +59,7 @@ public class ItemController { // 상품 관련 HTTP 요청을 처리하는 컨�
     }
 
 }
+
+//개별 상품 조회 및 카테고리 기반 상품 리스트 조회 기능을 제공
+//Controller → Service → DTO 흐름
+//API 일관성을 위해 ApiResponse와 Swagger @Operation을 적용

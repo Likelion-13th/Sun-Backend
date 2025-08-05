@@ -14,3 +14,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findById(Long categoryid);
 
 }
+
+//카테고리 정보를 DB에서 조회·저장하는 JPA 레포지토리 인터페이스로 이름과 id를 통해 조회한다.

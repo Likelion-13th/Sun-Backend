@@ -41,3 +41,7 @@ public class CategoryController {
     }
 
 }
+
+// Order API 패턴을 참고하여 카테고리 상품 조회 API 구현
+//API 일관성을 위해 ApiResponse와 Swagger @Operation을 적용
+//categorys/{id}/items, /categorys/name/{name}/items으로 상품 조회 가능

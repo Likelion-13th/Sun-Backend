@@ -41,3 +41,7 @@ public class UserAddressService {
         user.updateAddress(newAddress);
     }
 }
+
+//사용자 정보를 조회하고, 주소를 조회하거나 수정하는 기능
+//User 엔티티의 updateAddress() 메서드로 도메인 객체 스스로 상태를 변경가능.
+//응답/요청 DTO를 사용하여 계층 간 역할을 명확히 분리
