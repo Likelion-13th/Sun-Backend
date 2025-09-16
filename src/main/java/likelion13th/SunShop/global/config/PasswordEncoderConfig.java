@@ -13,4 +13,8 @@ public class PasswordEncoderConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // 최고 수준의 단방향 암호화
     }
+    public static class PasswordEncorderConfig {
+    }
 }
+
+//bean 으로 등록 안하면 스프링에서 인식을 못함. 필수!
