@@ -1,44 +1,48 @@
 package likelion13th.SunShop.service;
 
-import jakarta.transaction.Transactional;
+import likelion13th.SunShop.domain.User;
+import likelion13th.SunShop.domain.Address;
 import likelion13th.SunShop.DTO.request.AddressRequest;
 import likelion13th.SunShop.DTO.response.AddressResponse;
-import likelion13th.SunShop.domain.Address;
-import likelion13th.SunShop.domain.User;
 import likelion13th.SunShop.global.api.ErrorCode;
-import likelion13th.SunShop.global.exception.GeneralException;
-import likelion13th.SunShop.login.auth.jwt.CustomUserDetails;
+import likelion13th.SunShop.global.exception.CustomException;
 import likelion13th.SunShop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserAddressService {
+
     private final UserRepository userRepository;
 
-    /** 사용자 주소 조회 **/
+    // 사용자 주소 저장 (기본값 또는 변경)
     @Transactional
-    public AddressResponse getAddress(CustomUserDetails userDetails) {
-        User user = userRepository.findByProviderId(userDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+    public AddressResponse saveAddress(String providerId, AddressRequest request) {
+        User user = userRepository.findByProviderId(providerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return AddressResponse.from(user.getAddress());
+        // 사용자가 입력한 값이 없을 경우 기본 주소 사용
+        String zipcode = request.getZipcode();
+        String address = request.getAddress();
+        String detail = request.getAddressDetail();
+
+        // 새로운 주소 설정
+        Address newAddress = new Address(zipcode, address, detail);
+        user.updateAddress(newAddress); // User 엔티티에 주소 업데이트
+        userRepository.save(user); // 변경 사항 저장
+
+        return new AddressResponse(user.getAddress());
     }
 
-    /** 사용자 주소 저장/수정 **/
-    @Transactional
-    public void updateAddress(CustomUserDetails userDetails, AddressRequest request) {
-        User user = userRepository.findByProviderId(userDetails.getProviderId())
-                .orElseThrow(() -> new GeneralException(ErrorCode.USER_NOT_FOUND));
+    // 사용자 주소 조회 (기본값 -> 항공대로 제공)
+    @Transactional(readOnly = true)
+    public AddressResponse getAddress(String providerId) {
+        User user = userRepository.findByProviderId(providerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Address newAddress = new Address(
-                request.getZipcode(),
-                request.getAddress(),
-                request.getAddressDetail()
-        );
-
-        user.updateAddress(newAddress);
+        return new AddressResponse(user.getAddress());
     }
 }
 

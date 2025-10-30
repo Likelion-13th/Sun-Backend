@@ -2,15 +2,13 @@ package likelion13th.SunShop.DTO.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class AddressRequest {
-    private String zipcode;
-    private String address;
-    private String addressDetail;
+    private String zipcode;       // 사용자가 변경 가능
+    private String address;       // 사용자가 변경 가능
+    private String addressDetail; // 사용자가 변경 가능
 }
 
 // orderCreateRequest 패턴과 동일하게 적용

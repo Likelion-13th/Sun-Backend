@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-//실패 응답 코드들
-
 @Getter
 @AllArgsConstructor
 public enum ErrorCode implements BaseCode { // 실패
@@ -23,6 +21,8 @@ public enum ErrorCode implements BaseCode { // 실패
     USER_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_4042", "사용자 정보를 찾을 수 없습니다."),
     USER_ORDERS_EMPTY(HttpStatus.NOT_FOUND, "USER_4043", "사용자의 주문 내역이 없습니다."),
     USER_ORDER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_4044", "해당 주문이 없습니다."),
+
+    INVALID_MILEAGE(HttpStatus.BAD_REQUEST, "USER_4045", "보유한 마일리지를 초과하여 사용 및 회수 할 수 없습니다."),
 
     // Jwt
     WRONG_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "JWT_4041", "일치하는 리프레시 토큰이 없습니다."),
@@ -47,8 +47,6 @@ public enum ErrorCode implements BaseCode { // 실패
     S3_FILE_EMPTY(HttpStatus.BAD_REQUEST, "S3_400", "업로드할 파일이 비어 있습니다."),
     S3_INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "S3_401", "유효하지 않은 파일 형식입니다."),
 
-    //mileage
-    INVALID_MILEAGE(HttpStatus.BAD_REQUEST, "USER_400","사용할 수 없는 마일리지입니다."),
 
     // User Address 관련 에러 코드 추가
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "ADDRESS_4041", "해당 사용자의 주소 정보를 찾을 수 없습니다.");

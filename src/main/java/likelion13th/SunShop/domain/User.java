@@ -4,7 +4,8 @@ package likelion13th.SunShop.domain;
 
 import jakarta.persistence.*;
 import likelion13th.SunShop.domain.entity.BaseEntity;
-//import likelion13th.SunShop.login.auth.jwt.RefreshToken;
+import likelion13th.SunShop.login.auth.jwt.RefreshToken;
+import likelion13th.SunShop.login.auth.jwt.RefreshToken;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -51,9 +52,9 @@ public class User extends BaseEntity {
     @Setter(AccessLevel.NONE)
     private int recentTotal = 0;
 
-    /* Refresh Token 관계 설정 (1:1)
+    //Refresh Token 관계 설정 (1:1)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RefreshToken auth;*/
+    private RefreshToken auth;
 
     // 주소 정보 (임베디드 타입)
     @Embedded

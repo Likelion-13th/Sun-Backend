@@ -2,33 +2,14 @@ spring:
   profiles:
     active: local
 
-springdoc:
-  swagger-ui:
-    path: /swagger   # Swagger UI 접속 경로를 /swagger로 설정
-    display-request-duration: true  # 요청 소요시간 표시
-  api-docs:
-    enabled: true   # OpenAPI Docs (JSON) 활성화
-    path: /v3/api-docs     # OpenAPI Docs 접근 경로
-  cors:
-    enabled: true
-
----
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/sajang_db
-    username: sajang_user
-    password: sajang_password
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-  profiles:
-    active: local
+
   security:
     oauth2:
       client:
@@ -36,8 +17,8 @@ spring:
           kakao:
             client-id: ${KAKAO_REST_API_KEY}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
-            # redirect-uri: 나중에백엔드배포주소넣어주세요:)/login/oauth2/code/kakao
+            #redirect-uri: http://localhost:8080/login/oauth2/code/
+            redirect-uri: http://Sajang-dev-env.eba-5jnyte69.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             scope:
@@ -48,7 +29,85 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  #s3
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB       #파일 하나 크기
+      max-request-size: 60MB    #요청 전체 크기
 
-JWT_SECRET: ${JWT_SECRET}
-JWT_EXPIRATION: ${JWT_EXPIRATION}                  # Access(ms)
-JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}  # Refresh(ms)
+#s3
+cloud:
+  aws:
+    access-key: ${AWS_ACCESS_KEY:default-access-key}
+    secret-key: ${AWS_SECRET_KEY:default-secret-key}
+    region: ${AWS_REGION:ap-northeast-2}
+    bucket: ${AWS_BUCKET:default-bucket}
+
+jwt:
+  secret: ${JWT_SECRET}
+  accessExpirationTime: ${JWT_EXPIRATION}
+  refreshExpirationTime: ${JWT_REFRESH_EXPIRATION}
+
+server:
+  tomcat:
+    max-swallow-size: -1
+    max-http-form-post-size: -1
+
+#Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    # Swagger의 OpenAPI 명세를 제공하는 경로 설정
+  swagger-ui:
+    path: /swagger-ui.html
+    # Swaggerd UI 표시할 URL 경로 설정
+    display-request-duration: true # 요청이 안료되는 데 걸린 시간 표시 여부
+    operations-sorter: method # 메서드 이름 기준으로 API 정렬
+
+---
+#local profile
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: ${local.db.url}
+    username: ${local.db.username}
+    password: ${local.db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mocd: never
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.MySQLDialect
+      use_sql_comments: true
+      default_batch_fetch_size: 1000
+
+---
+# develop profile
+spring:
+  config:
+    activate:
+      on-profile: develop
+  datasource:
+    url: ${aws.db.url}
+    username: ${aws.db.username}
+    password: ${aws.db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mocd: never
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.MySQLDialect
+      use_sql_comments: true
+      default_batch_fetch_size: 1000
+
+
+

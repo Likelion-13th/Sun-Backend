@@ -1,8 +1,8 @@
 package likelion13th.SunShop.service;
 
-import jakarta.transaction.Transactional;
 import likelion13th.SunShop.DTO.response.ItemResponse;
 import likelion13th.SunShop.domain.Category;
+import likelion13th.SunShop.domain.Item;
 import likelion13th.SunShop.global.api.ErrorCode;
 import likelion13th.SunShop.global.exception.GeneralException;
 import likelion13th.SunShop.repository.CategoryRepository;
@@ -17,28 +17,24 @@ import java.util.stream.Collectors;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    //특정 카테고리 상품 목록 조회
-    @Transactional
+    /** 카테고리 존재 여부 확인 **/
+    // 이런 식으로 검증하는 메서드를 따로 만들어서 재사용성 높일 수 있음
+    public Category findCategoryById(Long categoryId){
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(()-> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    /** 카테고리 별 상품 목록 조회 **/
+    // DTO에 담아서 반환
     public List<ItemResponse> getItemsByCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND));
+        // 카테고리 유효성 검사
+        Category category = findCategoryById(categoryId);
 
-        return category.getItems().stream()
+        List<Item> items = category.getItems();
+        return items.stream()
                 .map(ItemResponse::from)
                 .collect(Collectors.toList());
     }
-
-    //카테고리 이름으로 조회
-    @Transactional
-    public List<ItemResponse> getItemsByCategoryName(String categoryName) {
-        Category category = categoryRepository.findByCategory_name(categoryName)
-                .orElseThrow(() -> new GeneralException(ErrorCode.CATEGORY_NOT_FOUND));
-
-        return category.getItems().stream()
-                .map(ItemResponse::from)
-                .collect(Collectors.toList());
-    }
-
 }
 
 //카테고리 기반으로 상품 목록을 조회하는 비즈니스 로직

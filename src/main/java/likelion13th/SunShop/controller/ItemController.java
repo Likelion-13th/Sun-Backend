@@ -2,7 +2,7 @@ package likelion13th.SunShop.controller; // 패키지 선언 - 컨트롤러 클�
 
 // 필요한 라이브러리들 import
 import io.swagger.v3.oas.annotations.Operation; // Swagger API 문서화를 위한 어노테이션
-import likelion13th.SunShop.DTO.response.ItemResponse; // 상품 응답 데이터 전송 객체
+import likelion13th.SunShop.DTO.response.ItemResponse;
 import likelion13th.SunShop.global.api.ApiResponse; // 통일된 API 응답 형식을 위한 클래스
 import likelion13th.SunShop.global.api.ErrorCode; // 에러 코드 정의 enum
 import likelion13th.SunShop.global.api.SuccessCode; // 성공 코드 정의 enum

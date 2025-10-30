@@ -1,7 +1,5 @@
 package likelion13th.SunShop.domain;
 
-//주소 임베디드 타입
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -17,10 +15,10 @@ public class Address {
     private String zipcode;
 
     @Column(nullable = false)
-    private String address; //
+    private String address;
 
-    @Column(nullable = false)
-    private String addressDetail; //
+    @Column(name = "address_detail", nullable = false)
+    private String addressDetail;
 
     public Address() {
         this.zipcode = "10540";

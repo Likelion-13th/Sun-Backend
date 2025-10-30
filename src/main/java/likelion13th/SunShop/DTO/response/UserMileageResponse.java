@@ -1,6 +1,5 @@
 package likelion13th.SunShop.DTO.response;
 
-import likelion13th.SunShop.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,14 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class UserMileageResponse {
     private int maxMileage;
-    private int recentTotal;
-
-    public static UserMileageResponse from(User user) {
-        return new UserMileageResponse(
-                user.getMaxMileage(),
-                user.getRecentTotal()
-        );
-    }
 }
 
 // orderResponse 패턴과 동일하게 적용

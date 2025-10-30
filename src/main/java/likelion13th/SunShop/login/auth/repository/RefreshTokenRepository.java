@@ -30,6 +30,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     void deleteByUser(@Param("user") User user);
 }
 
+
 /*
 1) 왜 필요한가?
 - JWT 인증 구조에서 Refresh Token은 db에 저장,관리해야만 재발급,로그아웃,강제 만료가 가능기 때문에
