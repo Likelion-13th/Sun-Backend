@@ -1,6 +1,5 @@
 package likelion13th.SunShop.controller;
 
-//HTTP 요청을 받는 계층. 주문 관련 API 엔드포인트
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import likelion13th.SunShop.DTO.request.OrderCreateRequest;
@@ -8,10 +7,8 @@ import likelion13th.SunShop.DTO.response.OrderResponse;
 import likelion13th.SunShop.global.api.ApiResponse;
 import likelion13th.SunShop.global.api.SuccessCode;
 import likelion13th.SunShop.login.auth.jwt.CustomUserDetails;
-import likelion13th.SunShop.login.service.UserService;
 import likelion13th.SunShop.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +17,11 @@ import java.util.List;
 
 
 @Tag(name = "주문", description = "주문 관련 API 입니다.")
-@Slf4j
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private final UserService userService;
 
     /** 주문 생성 **/
     @PostMapping
@@ -64,3 +59,6 @@ public class OrderController {
 
     }
 }
+
+
+//HTTP 요청을 받는 계층. 주문 관련 API 엔드포인트

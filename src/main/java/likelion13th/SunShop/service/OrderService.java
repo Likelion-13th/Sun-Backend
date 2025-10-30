@@ -1,6 +1,5 @@
 package likelion13th.SunShop.service;
 
-//비즈니스 로직 처리 계층. 주문 비즈니스 로직
 import jakarta.transaction.Transactional;
 import likelion13th.SunShop.DTO.request.OrderCreateRequest;
 import likelion13th.SunShop.DTO.response.OrderResponse;
@@ -11,9 +10,9 @@ import likelion13th.SunShop.global.api.ErrorCode;
 import likelion13th.SunShop.global.constant.OrderStatus;
 import likelion13th.SunShop.global.exception.GeneralException;
 import likelion13th.SunShop.login.auth.jwt.CustomUserDetails;
+import likelion13th.SunShop.login.service.UserService;
 import likelion13th.SunShop.repository.ItemRepository;
 import likelion13th.SunShop.repository.OrderRepository;
-import likelion13th.SunShop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,11 +26,13 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /** 주문 생성 **/
     @Transactional
-    public OrderResponse createOrder(OrderCreateRequest request, CustomUserDetails user) {
+    public OrderResponse createOrder(OrderCreateRequest request, CustomUserDetails customUserDetails) {
+        // 사용자 조회
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         // 상품 조회
         Item item = itemRepository.findById(request.getItemId())
                 .orElseThrow(() -> new GeneralException(ErrorCode.ITEM_NOT_FOUND));
@@ -43,7 +44,7 @@ public class OrderService {
         if (mileageToUse > user.getMaxMileage()) {
             throw new GeneralException(ErrorCode.INVALID_MILEAGE);
         }
-
+        // 논리 오류가 있엇서용...
         // 사용할 수 있는 최대 마일리지 = 총 금액
         int availableMileage = Math.min(mileageToUse, totalPrice);
         // 최종 결제 금액 계산
@@ -69,10 +70,11 @@ public class OrderService {
 
     /** 로그인한 사용자의 모든 주문 조회 **/
     @Transactional
-    public List<OrderResponse> getAllOrders(CustomUserDetails user) {
+    public List<OrderResponse> getAllOrders(CustomUserDetails customUserDetails) {
+        User user = userService.getAuthenticatedUser(customUserDetails.getProviderId());
         //프록시 객체 -> DTO로 변환 후 반환
         return user.getOrders().stream()
-                .map(order -> OrderResponse.from((Order) order))
+                .map(OrderResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -107,11 +109,11 @@ public class OrderService {
     }
 
 
-
+    @Scheduled(fixedRate = 60000) // 이럿케 수정해달랫음
     @Transactional
     public void updateOrderStatus() {
 
-        // PROCESSING 상태면서 1분 이전에 생성된 주문 찾기
+        // PROCESSING 상태면서 1 시간 이전에 생성된 주문 찾기
         List<Order> orders = orderRepository.findByStatusAndCreatedAtBefore(
                 OrderStatus.PROCESSING,
                 LocalDateTime.now().minusMinutes(1)

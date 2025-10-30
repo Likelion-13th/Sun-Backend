@@ -59,9 +59,7 @@ public class Order extends BaseEntity {
     }
 
     // 정적 팩토리 메서드
-    public static Order create(CustomUserDetails customUserDetails, Item item, int quantity, int totalPrice, int finalPrice) {
-        User user = customUserDetails.getUser();
-
+    public static Order create(User user, Item item, int quantity, int totalPrice, int finalPrice) {
         Order order = new Order(user, item, quantity);
         order.totalPrice = totalPrice;
         order.finalPrice = finalPrice;

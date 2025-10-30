@@ -1,7 +1,5 @@
 package likelion13th.SunShop.repository;
 
-//데이터베이스 접근 계층. 주문 데이터 접근
-
 import likelion13th.SunShop.domain.Order;
 import likelion13th.SunShop.global.constant.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

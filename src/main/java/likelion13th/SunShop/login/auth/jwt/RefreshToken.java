@@ -61,6 +61,7 @@ public class RefreshToken {
     // public boolean isExpired() { return ttl != null && System.currentTimeMillis() >= ttl; }
 }
 
+
 /*
 1) 왜 필요한가?
 JWT 인증 구조는 Access Token과 Refresh Token으로 구성되는데 Access Token이 만료되었을 때
