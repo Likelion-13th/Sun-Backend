@@ -84,12 +84,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         //    - Open Redirect 방지: 요청 파라미터의 redirect_uri가 허용된 호스트인지 검사
         String frontendRedirectUri = request.getParameter("redirect_uri");
         List<String> authorizedUris = List.of(
-                "프론트 배포 URL을 넣어주세요",
+                "https://sun-shop.netlify.app",
                 "http://localhost:3000"
         );
         if (frontendRedirectUri == null || !authorizedUris.contains(frontendRedirectUri)) {
             // 유효하지 않으면 기본 안전 도메인으로 강제
-            frontendRedirectUri = "프론트 배포 URL을 넣어주세요";
+            frontendRedirectUri = "https://sun-shop.netlify.app";
         }
 
         // 7) 프론트로 리다이렉트할 URL 구성
