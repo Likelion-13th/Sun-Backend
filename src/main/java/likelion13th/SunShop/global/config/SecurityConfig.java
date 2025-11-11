@@ -85,7 +85,7 @@ public class SecurityConfig {
                 "https://sun-shop.netlify.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "accept"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
