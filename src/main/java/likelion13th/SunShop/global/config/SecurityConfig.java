@@ -81,7 +81,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
-                // "아기 사자 백엔드 배포 주소",
+                "http://sajang-dev-env.eba-5jnyte69.ap-northeast-2.elasticbeanstalk.com",
                 "https://sun-shop.netlify.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
