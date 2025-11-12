@@ -36,51 +36,36 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         try {
-            // // 1) providerId 추출(프로젝트 매핑에 맞춰 조정 가능)
-            String providerId = extractProviderId(authentication);
-            log.info("// [OAuth2Success] providerId={}", providerId);
+            DefaultOAuth2User principal = (DefaultOAuth2User) ((OAuth2AuthenticationToken) authentication).getPrincipal();
+            Map<String, Object> attrs = principal.getAttributes();
 
-            // // 2) JWT 발급(Access/Refresh 생성 및 Refresh 저장)
+            String providerId = String.valueOf(attrs.getOrDefault("provider_id", attrs.get("id")));
+            String nickname   = String.valueOf(attrs.getOrDefault("nickname", "kakao_" + providerId));
+            log.info("[OAuth2Success] providerId={}, nickname={}", providerId, nickname);
+
+            // ✅ 신규 가입 보장
+            userService.ensureUserExists(providerId, nickname);
+
+            // ✅ JWT 발급
             JwtDto jwt = userService.jwtMakeSave(providerId);
-            log.info("// [OAuth2Success] JWT 발급 완료");
 
-            // // 3) 세션에서 프론트 Origin 회수(+사용 후 제거)
-            String frontendRedirectOrigin = (String) request.getSession().getAttribute("FRONT_REDIRECT_URI");
+            String origin = (String) request.getSession().getAttribute("FRONT_REDIRECT_URI");
             request.getSession().removeAttribute("FRONT_REDIRECT_URI");
+            if (origin == null || !ALLOWED_ORIGINS.contains(origin)) origin = DEFAULT_FRONT_ORIGIN;
 
-            // // 4) 최종 안전장치(화이트리스트 재검증)
-            if (frontendRedirectOrigin == null || !ALLOWED_ORIGINS.contains(frontendRedirectOrigin)) {
-                frontendRedirectOrigin = DEFAULT_FRONT_ORIGIN;
-            }
-
-            // // 5) 최종 리다이렉트 URL 생성(토큰은 URL 인코딩 권장)
-            String redirectUrl = UriComponentsBuilder
-                    .fromUriString(frontendRedirectOrigin)
+            String redirectUrl = UriComponentsBuilder.fromUriString(origin)
                     .queryParam("accessToken", URLEncoder.encode(jwt.getAccessToken(), StandardCharsets.UTF_8))
-                    .build(true)
-                    .toUriString();
+                    .build(true).toUriString();
 
-            log.info("// [OAuth2Success] redirect → {}", redirectUrl);
             response.sendRedirect(redirectUrl);
 
         } catch (GeneralException e) {
-            log.error("// [OAuth2Success] 도메인 예외: {}", e.getReason().getMessage());
+            log.error("[OAuth2Success] 도메인 예외: {}", e.getReason().getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("// [OAuth2Success] 예상치 못한 에러: {}", e.getMessage());
+            log.error("[OAuth2Success] 예기치 못한 오류: {}", e.getMessage());
             throw new GeneralException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
-    private String extractProviderId(Authentication authentication) {
-        if (authentication instanceof OAuth2AuthenticationToken oAuth2) {
-            if (oAuth2.getPrincipal() instanceof DefaultOAuth2User user) {
-                Map<String, Object> attrs = user.getAttributes();
-                Object v = attrs.getOrDefault("providerId", attrs.get("id")); // // Kakao 기본: "id"
-                if (v == null) throw new GeneralException(ErrorCode.UNAUTHORIZED);
-                return String.valueOf(v);
-            }
-        }
-        throw new GeneralException(ErrorCode.UNAUTHORIZED);
-    }
 }
+
