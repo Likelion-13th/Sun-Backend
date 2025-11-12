@@ -3,7 +3,7 @@ package likelion13th.SunShop.login.service;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 // 권장: org.springframework.transaction.annotation.Transactional 사용 (readOnly 등 추가 옵션 제공)
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import likelion13th.SunShop.domain.User;
 import likelion13th.SunShop.global.api.ErrorCode;
@@ -64,17 +64,6 @@ public class UserService {
      * Refresh Token 저장 또는 갱신
      * - providerId로 User를 조회한 뒤, 사용자당 1개의 RefreshToken 행을 upsert한다.
      */
-    @Transactional
-    public void ensureUserExists(String providerId, String nickname) {
-        if (userRepository.existsByProviderId(providerId)) return;
-
-        User u = new User();
-        u.setProviderId(providerId);
-        u.setUsernickname(nickname);   // NOT NULL 보장
-        u.setDeletable(true);          // 기본값 필요 시
-        userRepository.save(u);
-        log.info("신규 사용자 자동 생성 완료 (providerId={})", providerId);
-    }
     @Transactional
     public void saveRefreshToken(String providerId, String refreshToken) {
         // 1. 사용자 조회
@@ -226,7 +215,6 @@ public class UserService {
         refreshTokenRepository.flush(); // 즉시 반영이 꼭 필요하지 않다면 생략 가능
     }
 }
-
 
 // Spring Security 기반으로 사용자 인증 정보를 관리하며,
 // JWT 자체에 사용자 식별 정보를 포함시켜 별도의 세션 관리가 필요 없음.
